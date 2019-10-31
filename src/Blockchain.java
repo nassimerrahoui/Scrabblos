@@ -1,6 +1,6 @@
 import java.util.Vector;
 
-public class BlockChain {
+public class Blockchain {
 	
 	//chaque tour
 	private Vector<Lettre> letters;
@@ -8,16 +8,16 @@ public class BlockChain {
 	//blockchain courante
 	private Vector<Block> blockchain;
 	
-    private BlockChain(){
+    private Blockchain(){
     	letters = new Vector<Lettre>();
     	words = new Vector<Mot>();
     	blockchain = new Vector<Block>();
     }
  
     //------------------------MUTEX-------------------------
-    private static BlockChain INSTANCE = new BlockChain();
+    private static Blockchain INSTANCE = new Blockchain();
      
-    public static BlockChain getInstance(){
+    public static Blockchain getInstance(){
     	return INSTANCE;
     }
     
