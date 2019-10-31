@@ -3,21 +3,24 @@ import java.util.Vector;
 public class Mot {
 
 	private Vector<Lettre> mot;
+	private String word;
 	private String head;
 	private String politicien_public_key;
-	private String signature;
 	
-	public Mot(Vector<Lettre> mot, String head, String politicien_public_key, String signature) {
+	public Mot(Vector<Lettre> mot, String word, String head, String politicien_public_key) {
 		this.mot = mot;
+		this.word = word;
 		this.head = head;
 		this.politicien_public_key = politicien_public_key;
-		this.signature = signature;
 	}
 	
 	public Vector<Lettre> getMot() {
 		return mot;
 	}
 	
+	public String getWord() {
+		return word;
+	}
 	
 	public String getHead() {
 		return head;
@@ -25,9 +28,5 @@ public class Mot {
 	
 	public String getAuteur() {
 		return politicien_public_key;
-	}
-	
-	public String getSignature() {
-		return signature;
 	}
 }

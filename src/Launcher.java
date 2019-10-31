@@ -12,17 +12,15 @@ public class Launcher {
 		for (int i = 1; i < 6; i++) {
 			dicts.add(new File("dict/dict"+i+".txt"));			
 		}
-		//PatriciaTree p = PatriciaTree.createTree(dicts);
-		/*
+		PatriciaTree p = PatriciaTree.createTree(dicts);
 		Auteur a1 = new Auteur();
 		Auteur a2 = new Auteur();
 		Auteur a3 = new Auteur();
 		Auteur a4 = new Auteur();
-		Politicien p1 = new Politicien();
-		Politicien p2 = new Politicien();
-		Politicien p3 = new Politicien();
-		Politicien p4 = new Politicien();
-		*/
+		Politicien p1 = new Politicien(p);
+		Politicien p2 = new Politicien(p);
+		Politicien p3 = new Politicien(p);
+		Politicien p4 = new Politicien(p);
 	}
 
 }

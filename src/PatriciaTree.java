@@ -2,7 +2,9 @@
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -60,45 +62,53 @@ public class PatriciaTree {
 		}
 	}
 
-	public boolean search(char[] s) {
+	public String search(char[] s) {
 		if(s.length == 1) {
 			for(PatriciaTree r : list_noeuds) {
 				if(r.character == s[0]) {
-					return r.isFin();
+					return ""+s[0];
 				}
 			}
 		}
 		for(PatriciaTree r : list_noeuds) {
 			if(r.character == s[0]) {
-				return r.search(Arrays.copyOfRange(s, 1, s.length));
+				return ""+s[0]+r.search(Arrays.copyOfRange(s, 1, s.length));
 			}
 		}
-		return false;
+		return "";
 	}
-		
-
-	public static PatriciaTree createTree(ArrayList<String> words) {
+	
+	
+	/*public static PatriciaTree createTree(ArrayList<String> words) {
 		PatriciaTree root = new PatriciaTree('.');
 		for(String s : words) {
 			root.add(s.toCharArray());
 		}
 		return root;
-	} 
-
-	/*public static PatriciaTree createTree(ArrayList<File> dicts) {
-		for(File f : dicts) {
-			BufferedReader br = new BufferedReader(new FileReader(f));
-			ArrayList<String> lines = new ArrayList<>();
-			String line;
-			while((line = br.readLine()) != null) {
-				
-			}
-		}
-			PatriciaTree root = new PatriciaTree('.');
-			for(String s : words) {
-				root.add(s.toCharArray());
-			}
-			return root;
 	}*/ 
 
+	public static PatriciaTree createTree(ArrayList<File> dicts) {
+		ArrayList<String> lines = new ArrayList<>();
+		for(File f : dicts) {
+			BufferedReader br;
+			try {
+				br = new BufferedReader(new FileReader(f));
+				String line;
+				while((line = br.readLine()) != null) {
+					lines.add(line);
+				}
+				br.close();
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		PatriciaTree root = new PatriciaTree('.');
+		for(String s : lines) {
+			root.add(s.toCharArray());
+		}
+		return root;
+	}
 }
