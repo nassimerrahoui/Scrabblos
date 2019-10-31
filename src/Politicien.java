@@ -10,11 +10,13 @@ public class Politicien implements Runnable{
 	public static Blockchain bc = Blockchain.getInstance();
 	public int score;
 	public Vector<Lettre> letters;
+	private PatriciaTree patricia;
 	
-	public Politicien() {
+	public Politicien(PatriciaTree patricia) {
 		myident = ident++;
 		score = 0;
 		letters = null;
+		this.patricia = patricia;
 	}
 	
 	public Mot generateWord() {

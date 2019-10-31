@@ -33,7 +33,7 @@ public class Blockchain {
     public Vector<Block> getBlockchain() {
 		return blockchain;
 	}
-    
+        
     /** choisi le meilleur mot du tour actuel, 
      * 	vide la liste de mots et de lettres du tour actuel
      * 	creer un block et l'ajoute à la liste*/

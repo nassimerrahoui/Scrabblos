@@ -1,5 +1,8 @@
 
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -81,5 +84,21 @@ public class PatriciaTree {
 		}
 		return root;
 	} 
+
+	/*public static PatriciaTree createTree(ArrayList<File> dicts) {
+		for(File f : dicts) {
+			BufferedReader br = new BufferedReader(new FileReader(f));
+			ArrayList<String> lines = new ArrayList<>();
+			String line;
+			while((line = br.readLine()) != null) {
+				
+			}
+		}
+			PatriciaTree root = new PatriciaTree('.');
+			for(String s : words) {
+				root.add(s.toCharArray());
+			}
+			return root;
+	}*/ 
 
 }
