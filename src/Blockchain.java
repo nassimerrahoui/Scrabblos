@@ -1,4 +1,6 @@
 import java.util.Vector;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class Blockchain {
 	
@@ -7,8 +9,9 @@ public class Blockchain {
 	private Vector<Mot> words;
 	//blockchain courante
 	private Vector<Block> blockchain;
-	
-    private Blockchain(){
+	protected final Lock lock = new ReentrantLock();
+
+	private Blockchain(){
     	letters = new Vector<Lettre>();
     	words = new Vector<Mot>();
     	blockchain = new Vector<Block>();
@@ -32,6 +35,10 @@ public class Blockchain {
     
     public Vector<Block> getBlockchain() {
 		return blockchain;
+	}
+    
+    public Lock getLock() {
+		return lock;
 	}
         
     /** choisi le meilleur mot du tour actuel, 
