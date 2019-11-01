@@ -78,15 +78,6 @@ public class PatriciaTree {
 		return "";
 	}
 	
-	
-	/*public static PatriciaTree createTree(ArrayList<String> words) {
-		PatriciaTree root = new PatriciaTree('.');
-		for(String s : words) {
-			root.add(s.toCharArray());
-		}
-		return root;
-	}*/ 
-
 	public static PatriciaTree createTree(ArrayList<File> dicts) {
 		ArrayList<String> lines = new ArrayList<>();
 		for(File f : dicts) {
@@ -101,7 +92,6 @@ public class PatriciaTree {
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}

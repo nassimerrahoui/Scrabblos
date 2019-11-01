@@ -2,15 +2,13 @@
 public class Lettre {
 
 	private char lettre;
-	private String head;
+	private String precedent_hashed;
 	private String auteur_public_key;
-	private String signature;
 	
-	public Lettre(char lettre, String head, String auteur_public_key, String signature) {
+	public Lettre(char lettre, String precedent_hashed, String auteur_public_key) {
 		this.lettre = lettre;
-		this.head = head;
+		this.precedent_hashed = precedent_hashed;
 		this.auteur_public_key = auteur_public_key;
-		this.signature = signature;
 	}
 	
 	public char getLettre() {
@@ -18,14 +16,10 @@ public class Lettre {
 	}
 		
 	public String getHead() {
-		return head;
+		return precedent_hashed;
 	}
 	
 	public String getAuteur() {
 		return auteur_public_key;
-	}
-	
-	public String getSignature() {
-		return signature;
 	}
 }

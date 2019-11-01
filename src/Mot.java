@@ -3,12 +3,12 @@ import java.util.Vector;
 public class Mot {
 
 	private Vector<Lettre> mot;
-	private String head;
+	private String precedent_hashed;
 	private String politicien_public_key;
 	
-	public Mot(Vector<Lettre> mot, String head, String politicien_public_key) {
+	public Mot(Vector<Lettre> mot, String precedent_hashed, String politicien_public_key) {
 		this.mot = mot;
-		this.head = head;
+		this.precedent_hashed = precedent_hashed;
 		this.politicien_public_key = politicien_public_key;
 	}
 	
@@ -18,7 +18,7 @@ public class Mot {
 	
 	
 	public String getHead() {
-		return head;
+		return precedent_hashed;
 	}
 	
 	public String getAuteur() {

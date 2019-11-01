@@ -9,10 +9,11 @@ public class Launcher {
 	
 	public static void main(String[] args) {
 		ArrayList<File> dicts = new ArrayList<>();
-		for (int i = 1; i < 6; i++) {
-			dicts.add(new File("dict/dict"+i+".txt"));			
+		for (int i = 1; i < 5; i++) {
+			dicts.add(new File("src/dict/dict"+i+".txt"));			
 		}
 		PatriciaTree p = PatriciaTree.createTree(dicts);
+		System.out.println("salut");
 		Auteur a1 = new Auteur();
 		Auteur a2 = new Auteur();
 		Auteur a3 = new Auteur();

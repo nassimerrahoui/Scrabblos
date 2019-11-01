@@ -54,7 +54,7 @@ public class Auteur implements Runnable {
 			try {
 				bc.getLock().lock();
 				/** TODO injection lettre aleatoire **/
-				Lettre l = new Lettre(lettres.remove(0), "head", hash_id(myident), "signature");
+				Lettre l = new Lettre(lettres.remove(0), "head", hash_id(myident));
 				bc.getLetters().add(l);
 			} finally {
 				bc.getLock().unlock();
