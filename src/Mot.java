@@ -16,12 +16,19 @@ public class Mot {
 		return mot;
 	}
 	
+	public String get_full_word() {
+		String s = "";
+		for(Lettre l : mot) {
+			s+= l.getLettre();
+		}
+		return s;
+	}
+	public String getPoliticien_public_key() {
+		return politicien_public_key;
+	}
 	
-	public String getHead() {
+	public String getPrecedent_hashed() {
 		return precedent_hashed;
 	}
 	
-	public String getAuteur() {
-		return politicien_public_key;
-	}
 }

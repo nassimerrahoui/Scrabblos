@@ -1,3 +1,4 @@
+import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Random;
@@ -38,14 +39,38 @@ public class Auteur implements Runnable {
 
 	public static String hash_id(int id) {
 		byte[] hash = new byte[256];
-		byte[] input = ("" + id).getBytes();
+		byte[] input = (""+id).getBytes(StandardCharsets.UTF_8);
 		try {
 			MessageDigest md = MessageDigest.getInstance("SHA-256");
 			hash = md.digest(input);
+			
 		} catch (NoSuchAlgorithmException e) {
 			e.printStackTrace();
 		}
-		return new String(hash);
+		return bytesToHex(hash);
+	}
+	
+	private static String bytesToHex(byte[] hashInBytes) {
+
+        StringBuilder sb = new StringBuilder();
+        for (byte b : hashInBytes) {
+            sb.append(String.format("%02x", b));
+        }
+        return sb.toString();
+
+    }
+	
+	public static String hash_word(String word) {
+		byte[] hash = new byte[256];
+		byte[] input = word.getBytes(StandardCharsets.UTF_8);
+		try {
+			MessageDigest md = MessageDigest.getInstance("SHA-256");
+			hash = md.digest(input);
+			
+		} catch (NoSuchAlgorithmException e) {
+			e.printStackTrace();
+		}
+		return bytesToHex(hash);
 	}
 
 	@Override

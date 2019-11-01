@@ -1,3 +1,4 @@
+import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Collections;
@@ -5,13 +6,18 @@ import java.util.Vector;
 
 public class Politicien implements Runnable{
 	
+	//--------ID---------
 	static int ident = 0;
 	int myident;
-	public static Blockchain bc = Blockchain.getInstance();
-	public int score;
 	public String hashed_id;
-	public Vector<Lettre> letters;
+	public int score;
 	private PatriciaTree patricia;
+	
+	//-----------------BLOCKCHAIN-------------------
+	public static Blockchain bc = Blockchain.getInstance();
+	
+	//-----------TOUR----------------
+	public Vector<Lettre> letters;
 	
 	public Politicien(PatriciaTree patricia) {
 		myident = ident++;
@@ -24,12 +30,11 @@ public class Politicien implements Runnable{
 	public Mot generateWord() {
 		letters = bc.getLetters();
 		//generate word
-		Vector<Lettre> used_letter = new Vector<>();
-		Collections.copy(letters, used_letter);
-		Collections.shuffle(letters);
-		char[] tab = new char[letters.size()];
-		for(int i = 0;i<letters.size();i++){
-			tab[i] = letters.get(i).getLettre();
+		Vector<Lettre> used_letter = new Vector<>(letters);
+		Collections.shuffle(used_letter);
+		char[] tab = new char[used_letter.size()];
+		for(int i = 0;i<used_letter.size();i++){
+			tab[i] = used_letter.get(i).getLettre();
 		}
 		String s = patricia.search(tab);
 		for(int i = 0; i<letters.size();i++) {
@@ -37,27 +42,36 @@ public class Politicien implements Runnable{
 			used_letter.remove(i);
 		}
 		if(s != "") {
-			return null;//return new Mot(used_letter, bc.getBlockchain().lastElement().getMot(), hashed_id);
+			return new Mot(used_letter, hash_word(bc.getBlockchain().lastElement().getMot().get_full_word()), hashed_id);
 		}
 		return null;
 	}
 	
     public void inject_word() {
-    	
+    	Mot m = generateWord();
+    	bc.getWords().add(m);
     }
 
 	@Override
 	public void run() {
-		while(bc.getBlockchain().size() == 20) {
-			synchronized (bc) {
+		while (bc.getBlockchain().size() == 20) {
+			try {
+				bc.getLock().lock();
 				inject_word();
+			} finally {
+				bc.getLock().unlock();
+			}
+			try {
+				bc.getPoliticienCondition().await();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
 			}
 		}
 	}
     
-	public static byte[] hash_id(int id) {
+	public static String hash_id(int id) {
 		byte[] hash = new byte[256];
-		byte[] input = (""+id).getBytes();
+		byte[] input = (""+id).getBytes(StandardCharsets.UTF_8);
 		try {
 			MessageDigest md = MessageDigest.getInstance("SHA-256");
 			hash = md.digest(input);
@@ -65,12 +79,22 @@ public class Politicien implements Runnable{
 		} catch (NoSuchAlgorithmException e) {
 			e.printStackTrace();
 		}
-		return hash;
+		return bytesToHex(hash);
 	}
 	
-	public static byte[] hash_word(String word) {
+	private static String bytesToHex(byte[] hashInBytes) {
+
+        StringBuilder sb = new StringBuilder();
+        for (byte b : hashInBytes) {
+            sb.append(String.format("%02x", b));
+        }
+        return sb.toString();
+
+    }
+	
+	public static String hash_word(String word) {
 		byte[] hash = new byte[256];
-		byte[] input = word.getBytes();
+		byte[] input = word.getBytes(StandardCharsets.UTF_8);
 		try {
 			MessageDigest md = MessageDigest.getInstance("SHA-256");
 			hash = md.digest(input);
@@ -78,6 +102,6 @@ public class Politicien implements Runnable{
 		} catch (NoSuchAlgorithmException e) {
 			e.printStackTrace();
 		}
-		return hash;
+		return bytesToHex(hash);
 	}
 }
