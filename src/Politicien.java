@@ -31,49 +31,42 @@ public class Politicien implements Runnable {
 	public Mot generateWord() {
 		letters = bc.getLetters();
 		// generate word
-		System.out.println("size letter : "+letters.size());
 		Vector<Lettre> used_letter = new Vector<>(letters);
-		System.out.println("size used" +used_letter.size());
 		Collections.shuffle(used_letter);
 		char[] tab = new char[used_letter.size()];
 		for (int i = 0; i < used_letter.size(); i++) {
 			tab[i] = used_letter.get(i).getLettre();
 		}
 		String s = patricia.search(tab);
-		used_letter.clear();
-		for (int i = 0; i < letters.size(); i++) {
-			if (letters.get(i).getLettre() == s.charAt(i))
-				used_letter.add(letters.get(i));
+		for(int i = used_letter.size()-1;i >= s.length();i--) {
+			used_letter.remove(i);
 		}
-		if (s != "") {
-			return new Mot(used_letter, hash_word(bc.getBlockchain().lastElement().getMot().get_full_word()),
-					hashed_id);
-		}
-		return null;
+		return new Mot(used_letter, hash_word(bc.getBlockchain().lastElement().getMot().get_full_word()),hashed_id);
 	}
 
 	public void inject_word() {
 		Mot m = generateWord();
 		bc.getWords().add(m);
-		System.out.println("ajout du mot "+m.get_full_word()+" à la liste de possibilités");
+		System.out.println("ajout du mot \""+m.get_full_word()+"\" à la liste de possibilités");
 		cptInjection++;
 	}
 
 	@Override
 	public void run() {
-		while (bc.getBlockchain().size() < 3) {
+		int nbTours = bc.getNbTours();
+		while (bc.getBlockchain().size() < nbTours) {
 			try {
 				bc.getLock().lock();
 				bc.getPoliticienCondition().await();
-				if(bc.getBlockchain().size() == 3) break;
-				System.out.println("Tour "+bc.getBlockchain().size()+" de Politicien "+myident);
+				if(bc.getBlockchain().size() == nbTours) break;
+//				System.out.println("Tour "+bc.getBlockchain().size()+" de Politicien "+myident);
 				inject_word();
-				System.out.println("Fin Tour "+bc.getBlockchain().size()+" de Politicien "+myident);
+//				System.out.println("Fin Tour "+bc.getBlockchain().size()+" de Politicien "+myident);
 			} catch(InterruptedException e) {
 				e.printStackTrace();
 			}finally {	
 				if (bc.getNbPoliticien() == cptInjection) {
-					System.out.println("Last politicien, au tour du consensus");
+//					System.out.println("Last politicien, au tour du consensus");
 					cptInjection = 0;
 					bc.Consensus();
 				}

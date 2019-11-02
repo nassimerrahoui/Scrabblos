@@ -86,20 +86,24 @@ public class Auteur implements Runnable {
 
 	@Override
 	public void run() {
-		while (bc.getBlockchain().size() < 4) {
+		int nbTours = bc.getNbTours();
+		while (bc.getBlockchain().size() < nbTours+1) {
 			Collections.shuffle(lettres);
 			bc.getLock().lock();
-			System.out.println("Tour "+bc.getBlockchain().size()+" de Auteur "+myident);
+			if (cptInjection == 0) {
+				System.out.println("-------------TOUR "+bc.getBlockchain().size()+"--------------");
+			}
+//			System.out.println("Tour "+bc.getBlockchain().size()+" de Auteur "+myident);
 			addLettre();
-			System.out.println("Fin Tour "+bc.getBlockchain().size()+" de Auteur "+myident);	
+//			System.out.println("Fin Tour "+bc.getBlockchain().size()+" de Auteur "+myident);	
 			if (bc.getNbAuteur() == cptInjection) {
 				cptInjection = 0;
 				bc.getPoliticienCondition().signalAll();
-				System.out.println("Last auteur, au tour des politiciens");
+//				System.out.println("Last auteur, au tour des politiciens");
 			}
 
 			try {
-				if(bc.getBlockchain().size() == 3) break;
+				if(bc.getBlockchain().size() == nbTours) break;
 				bc.getAuteurCondition().await();
 			} catch (InterruptedException e) {
 				e.printStackTrace();

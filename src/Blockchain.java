@@ -16,6 +16,7 @@ public class Blockchain {
 	private final Condition politicienCondition = lock.newCondition();
 	private int nbAuteur;
 	private int nbPoliticien;
+	private int nbTours;
 	private int compteurPhase;
 	private boolean phaseAuteur;
 	private HashMap<Character, Integer> scoreLettres = new HashMap<>();
@@ -106,6 +107,14 @@ public class Blockchain {
 	public void setNbPoliticien(int nbPoliticien) {
 		this.nbPoliticien = nbPoliticien;
 	}
+	
+	public void setNbTours(int nbTours) {
+		this.nbTours = nbTours;
+	}
+	
+	public int getNbTours() {
+		return nbTours;
+	}
 
 	public int getNbAuteur() {
 		return nbAuteur;
@@ -115,11 +124,17 @@ public class Blockchain {
 		return nbPoliticien;
 	}
 
-	private int getScore(Mot m) {
+	public int getScore(Mot m) {
 		int res = 0;
 		for (char c : m.get_full_word().toCharArray()) {
 			res += scoreLettres.get(c);
 		}
+		return res;
+	}
+	
+	public int getScore(Lettre l) {
+		int res = 0;
+		res = scoreLettres.get(l.getLettre());
 		return res;
 	}
 
@@ -140,11 +155,16 @@ public class Blockchain {
 		}
 		blockchain.add(new Block(max));
 		System.out.println("le mot " + max.get_full_word() + " à été choisi");
-		System.out.println("fin du consensus, reveil des auteurs");
+//		System.out.println("fin du consensus, reveil des auteurs");
 		letters.clear();
 		words.clear();
-		// Ajouter score aux politicines/auteurs et lancer auteurs
-		if(blockchain.size() < 20) {
+		try {
+			Thread.sleep(1000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		if(blockchain.size() <= nbTours) {
 			auteurCondition.signalAll();
 		}
 	}
