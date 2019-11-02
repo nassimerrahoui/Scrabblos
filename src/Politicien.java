@@ -6,41 +6,35 @@ import java.util.Vector;
 
 public class Politicien implements Runnable {
 
-	// --------ID---------
-	static int ident = 0;
-	int myident;
-	public String hashed_id;
-	public int score;
-	private PatriciaTree patricia;
+	//statique
+	protected static int ident = 0;
+	protected int myident;
+	protected String hashed_id;
+	protected int score;
+	protected PatriciaTree patricia;
+	public static Blockchain bc;
 
-	// -----------------BLOCKCHAIN-------------------
-	public static Blockchain bc = Blockchain.getInstance();
-
-	// -----------TOUR----------------
+	//dynamique
 	public Vector<Lettre> letters;
 	protected static int cptInjection = 0;
 
 	public Politicien(PatriciaTree patricia) {
 		myident = ident++;
-		score = 0;
-		letters = null;
-		this.patricia = patricia;
 		hashed_id = new String(hash_id(myident));
+		score = 0;
+		bc = Blockchain.getInstance();
+		letters = bc.getLetters();
+		this.patricia = patricia;
 	}
 
 	public Mot generateWord() {
 		letters = bc.getLetters();
-		// generate word
 		Vector<Lettre> used_letter = new Vector<>(letters);
 		Collections.shuffle(used_letter);
 		char[] tab = new char[used_letter.size()];
-		for (int i = 0; i < used_letter.size(); i++) {
-			tab[i] = used_letter.get(i).getLettre();
-		}
+		for (int i = 0; i < used_letter.size(); i++) tab[i] = used_letter.get(i).getLettre();
 		String s = patricia.search(tab);
-		for(int i = used_letter.size()-1;i >= s.length();i--) {
-			used_letter.remove(i);
-		}
+		for(int i = used_letter.size()-1;i >= s.length();i--) used_letter.remove(i);
 		return new Mot(used_letter, hash_word(bc.getBlockchain().lastElement().getMot().get_full_word()),hashed_id);
 	}
 
@@ -51,6 +45,26 @@ public class Politicien implements Runnable {
 		cptInjection++;
 	}
 
+	private String bytesToHex(byte[] hashInBytes) {
+		StringBuilder sb = new StringBuilder();
+		for (byte b : hashInBytes) sb.append(String.format("%02x", b));
+		return sb.toString();
+	}
+
+	public String hash_id(int id) {
+		byte[] hash = new byte[256];
+		byte[] input = (String.valueOf(id)).getBytes(StandardCharsets.UTF_8);
+		try { hash = MessageDigest.getInstance("SHA-256").digest(input);} catch (NoSuchAlgorithmException e) {e.printStackTrace();}
+		return bytesToHex(hash);
+	}
+
+	public String hash_word(String word) {
+		byte[] hash = new byte[256];
+		byte[] input = word.getBytes(StandardCharsets.UTF_8);
+		try {hash = MessageDigest.getInstance("SHA-256").digest(input);} catch (NoSuchAlgorithmException e) {e.printStackTrace();}
+		return bytesToHex(hash);
+	}
+	
 	@Override
 	public void run() {
 		int nbTours = bc.getNbTours();
@@ -59,14 +73,10 @@ public class Politicien implements Runnable {
 				bc.getLock().lock();
 				bc.getPoliticienCondition().await();
 				if(bc.getBlockchain().size() == nbTours) break;
-//				System.out.println("Tour "+bc.getBlockchain().size()+" de Politicien "+myident);
 				inject_word();
-//				System.out.println("Fin Tour "+bc.getBlockchain().size()+" de Politicien "+myident);
-			} catch(InterruptedException e) {
-				e.printStackTrace();
-			}finally {	
+			} catch(InterruptedException e) {e.printStackTrace();
+			} finally {	
 				if (bc.getNbPoliticien() == cptInjection) {
-//					System.out.println("Last politicien, au tour du consensus");
 					cptInjection = 0;
 					bc.Consensus();
 				}
@@ -74,41 +84,5 @@ public class Politicien implements Runnable {
 			}
 		}
 		System.out.println("Fin Politicien "+myident);
-	}
-
-	public static String hash_id(int id) {
-		byte[] hash = new byte[256];
-		byte[] input = ("" + id).getBytes(StandardCharsets.UTF_8);
-		try {
-			MessageDigest md = MessageDigest.getInstance("SHA-256");
-			hash = md.digest(input);
-
-		} catch (NoSuchAlgorithmException e) {
-			e.printStackTrace();
-		}
-		return bytesToHex(hash);
-	}
-
-	private static String bytesToHex(byte[] hashInBytes) {
-
-		StringBuilder sb = new StringBuilder();
-		for (byte b : hashInBytes) {
-			sb.append(String.format("%02x", b));
-		}
-		return sb.toString();
-
-	}
-
-	public static String hash_word(String word) {
-		byte[] hash = new byte[256];
-		byte[] input = word.getBytes(StandardCharsets.UTF_8);
-		try {
-			MessageDigest md = MessageDigest.getInstance("SHA-256");
-			hash = md.digest(input);
-
-		} catch (NoSuchAlgorithmException e) {
-			e.printStackTrace();
-		}
-		return bytesToHex(hash);
 	}
 }

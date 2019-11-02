@@ -1,5 +1,3 @@
-
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -7,7 +5,6 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-
 
 public class PatriciaTree {
 
@@ -22,21 +19,10 @@ public class PatriciaTree {
 	}
 
 
-	public char getCharacter() {
-		return character;
-	}
-
-	public ArrayList<PatriciaTree> getList_noeuds() {
-		return list_noeuds;
-	}
-
-	public boolean isFin() {
-		return fin;
-	}
-
-	public void setFin(boolean fin) {
-		this.fin = fin;
-	}
+	public char getCharacter() {return character;}
+	public ArrayList<PatriciaTree> getList_noeuds() {return list_noeuds;}
+	public boolean isFin() {return fin;}
+	public void setFin(boolean fin) {this.fin = fin;}
 
 	public void add(char[] s) {
 		if(s.length == 1) {
@@ -63,18 +49,11 @@ public class PatriciaTree {
 	}
 
 	public String search(char[] s) {
-		if(s.length == 1) {
-			for(PatriciaTree r : list_noeuds) {
-				if(r.character == s[0]) {
-					return ""+s[0];
-				}
-			}
-		}
-		for(PatriciaTree r : list_noeuds) {
-			if(r.character == s[0]) {
-				return ""+s[0]+r.search(Arrays.copyOfRange(s, 1, s.length));
-			}
-		}
+		if(s.length == 1) 
+			for(PatriciaTree r : list_noeuds) 
+				if(r.character == s[0]) return ""+s[0];
+		for(PatriciaTree r : list_noeuds)
+			if(r.character == s[0]) return ""+s[0]+r.search(Arrays.copyOfRange(s, 1, s.length));
 		return "";
 	}
 	
@@ -85,20 +64,13 @@ public class PatriciaTree {
 			try {
 				br = new BufferedReader(new FileReader(f));
 				String line;
-				while((line = br.readLine()) != null) {
-					lines.add(line);
-				}
+				while((line = br.readLine()) != null) lines.add(line);
 				br.close();
-			} catch (FileNotFoundException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+			} catch (FileNotFoundException e) {e.printStackTrace();} 
+			  catch (IOException e) {e.printStackTrace();}
 		}
 		PatriciaTree root = new PatriciaTree('.');
-		for(String s : lines) {
-			root.add(s.toCharArray());
-		}
+		for(String s : lines) root.add(s.toCharArray());
 		return root;
 	}
 }
