@@ -71,7 +71,6 @@ public class PatriciaTree {
 			}
 		}
 		for(PatriciaTree r : list_noeuds) {
-			System.out.println(s[0]);
 			if(r.character == s[0]) {
 				return ""+s[0]+r.search(Arrays.copyOfRange(s, 1, s.length));
 			}
