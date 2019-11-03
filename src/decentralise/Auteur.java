@@ -93,10 +93,10 @@ public class Auteur implements Runnable {
 			bc.getLock().lock();
 			try {
 				bc.getAuteurCondition().await();
-				if(bc.getWords().size() == bc.getNbPoliticien()) {
+				if(bc.getWords().size() != 0) {
 					bc.Consensus();
-					cptUpdate++;
 				}
+				cptUpdate++;
 				if (bc.getNbAuteur() == cptUpdate) {
 					cptUpdate = 0;
 					bc.getPoliticienCondition().signalAll();

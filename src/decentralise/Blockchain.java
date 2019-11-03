@@ -11,7 +11,7 @@ public class Blockchain {
 	private final static Lock lock = new ReentrantLock();
 	private final static Condition auteurCondition = lock.newCondition();
 	private final static Condition politicienCondition = lock.newCondition();
-	private static int nbAuteur,nbPoliticien,nbTours;
+	private static int nbAuteur,nbPoliticien,nbTours,difficulte;
 	
 	//dynamique
 	private static Vector<Lettre> letters;
@@ -24,6 +24,7 @@ public class Blockchain {
 		words = new Vector<Mot>();
 		blockchain = new Vector<Block>();
 		scoreLettres = new HashMap<>();
+		difficulte = 0;
 
 		scoreLettres.put('a', 1);scoreLettres.put('e', 1);scoreLettres.put('i', 1);scoreLettres.put('n', 1);scoreLettres.put('o', 1);scoreLettres.put('r', 1);
 		scoreLettres.put('s', 1);scoreLettres.put('t', 1);scoreLettres.put('u', 1);scoreLettres.put('l', 1);
@@ -39,6 +40,7 @@ public class Blockchain {
 	//public static Blockchain getInstance() {return INSTANCE;}
 	public Vector<Lettre> getLetters() {return letters;}
 	public Vector<Mot> getWords() {return words;}
+	public int getDifficulte() {return difficulte;}
 	public Vector<Block> getBlockchain() {return blockchain;}
 	public Lock getLock() {return lock;}
 	public Condition getAuteurCondition() {return auteurCondition;}
@@ -63,7 +65,7 @@ public class Blockchain {
 	public void setNbAuteur(int nbAuteur) {Blockchain.nbAuteur = nbAuteur;}
 	public void setNbPoliticien(int nbPoliticien) {Blockchain.nbPoliticien = nbPoliticien;}
 	public void setNbTours(int nbTours) {Blockchain.nbTours = nbTours;}
-
+	public void setDifficulte(int difficulte) {Blockchain.difficulte = difficulte;}
 	/**
 	 * choisi le meilleur mot du tour actuel, 
 	 * vide la liste de mots et de lettres 

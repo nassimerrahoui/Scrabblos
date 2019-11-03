@@ -1,3 +1,4 @@
+package centralise;
 import java.util.HashMap;
 import java.util.Vector;
 import java.util.concurrent.locks.Condition;
@@ -9,7 +10,7 @@ public class Blockchain {
 	// statique
 	private final Lock lock;
 	private final Condition auteurCondition,politicienCondition;
-	private int nbAuteur,nbPoliticien,nbTours;
+	private int nbAuteur,nbPoliticien,nbTours,difficulte;
 	
 	//dynamique
 	private Vector<Lettre> letters;
@@ -25,6 +26,7 @@ public class Blockchain {
 		words = new Vector<Mot>();
 		blockchain = new Vector<Block>();
 		scoreLettres = new HashMap<>();
+		difficulte = 0;
 
 		scoreLettres.put('a', 1);scoreLettres.put('e', 1);scoreLettres.put('i', 1);scoreLettres.put('n', 1);scoreLettres.put('o', 1);scoreLettres.put('r', 1);
 		scoreLettres.put('s', 1);scoreLettres.put('t', 1);scoreLettres.put('u', 1);scoreLettres.put('l', 1);
@@ -40,6 +42,7 @@ public class Blockchain {
 	public static Blockchain getInstance() {return INSTANCE;}
 	public Vector<Lettre> getLetters() {return letters;}
 	public Vector<Mot> getWords() {return words;}
+	public int getDifficulte() {return difficulte;}
 	public Vector<Block> getBlockchain() {return blockchain;}
 	public Lock getLock() {return lock;}
 	public Condition getAuteurCondition() {return auteurCondition;}
@@ -64,6 +67,7 @@ public class Blockchain {
 	public void setNbAuteur(int nbAuteur) {this.nbAuteur = nbAuteur;}
 	public void setNbPoliticien(int nbPoliticien) {this.nbPoliticien = nbPoliticien;}
 	public void setNbTours(int nbTours) {this.nbTours = nbTours;}
+	public void setDifficulte(int difficulte) {this.difficulte = difficulte;}
 
 	/**
 	 * choisi le meilleur mot du tour actuel, 
@@ -85,7 +89,5 @@ public class Blockchain {
 		System.out.println("le mot " + max.get_full_word() + " à été choisi");
 		letters.clear();
 		words.clear();
-		try {Thread.sleep(1000);} catch (InterruptedException e) {e.printStackTrace();}
-		if(blockchain.size() <= nbTours) auteurCondition.signalAll();
 	}
 }

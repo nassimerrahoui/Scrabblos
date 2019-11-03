@@ -1,3 +1,4 @@
+package centralise;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -71,7 +72,10 @@ public class Auteur implements Runnable {
 		while (bc.getBlockchain().size() < nbTours+1) {
 			Collections.shuffle(lettres);
 			bc.getLock().lock();
-			if (cptInjection == 0) System.out.println("-------------TOUR "+bc.getBlockchain().size()+"--------------");
+			if (cptInjection == 0) {
+				try {Thread.sleep(1000);} catch (InterruptedException e) {e.printStackTrace();}
+				System.out.println("-------------TOUR "+bc.getBlockchain().size()+"--------------");
+			}
 			addLettre();
 			if (bc.getNbAuteur() == cptInjection) {
 				cptInjection = 0;

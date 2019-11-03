@@ -1,3 +1,4 @@
+package centralise;
 import java.util.Vector;
 
 public class Mot {

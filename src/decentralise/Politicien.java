@@ -47,8 +47,10 @@ public class Politicien implements Runnable {
 
 	public void inject_word() {
 		Mot m = generateWord();
-		bc.getWords().add(m);
-		System.out.println("Politicien "+myident+"		ajout du mot \""+m.get_full_word()+"\" aux possibilités");
+		if(m.get_full_word().length() >= bc.getDifficulte()) {
+			bc.getWords().add(m);
+			System.out.println("Politicien "+myident+"		ajout du mot \""+m.get_full_word()+"\" aux possibilités");
+		}
 		cptInjection++;
 	}
 
@@ -90,15 +92,23 @@ public class Politicien implements Runnable {
 				//block d'update
 				bc.getLock().lock();
 				bc.getPoliticienCondition().await();
-				if(bc.getWords().size() == bc.getNbPoliticien()) {
+				if(bc.getWords().size() != 0) {
 					bc.Consensus();
-					cptUpdate++;
 				}
+				cptUpdate++;
 				if(bc.getNbPoliticien() == cptUpdate) {
 					if(bc.getBlockchain().size() <= nbTours+1) {
 						bc.getLetters().clear();
+						if(bc.getWords().size() > (int)bc.getNbPoliticien()*0.1) {
+							bc.setDifficulte(bc.getDifficulte()+2);
+							System.out.println("On augmente la difficulté à "+bc.getDifficulte());
+						}else {
+							bc.setDifficulte(bc.getDifficulte()-1);
+							System.out.println("On baisse la difficulté à "+bc.getDifficulte());
+						}
 						bc.getWords().clear();
-						System.out.println("Le mot "+bc.getBlockchain().lastElement().getMot().get_full_word()+" à été choisi.");
+						String word = bc.getBlockchain().lastElement().getMot().get_full_word();
+						System.out.println("Le mot "+word+" à été choisi.");
 						bc.getAuteurCondition().signalAll();
 					}
 					cptUpdate = 0;
